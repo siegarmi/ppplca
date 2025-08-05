@@ -4,7 +4,7 @@ import pandas as pd
 from copy import deepcopy
 import re
 
-from app.Actions.name_match import get_lca_db_locations
+from ppplca.Actions.name_match import get_lca_db_locations
 
 project = "Parametrized LCA final"
 bd.projects.set_current(project)

@@ -7,12 +7,12 @@ import bw2io as bi
 import time
 
 from ecoinvent_interface import Settings
-from app.config import config
-from app.Actions.import_agrifootprint_db_functions import import_agrifootprint
-from app.Actions.bw_base_set_up import bw_set_up, regionalize_db
+from ppplca.config import config
+from ppplca.Actions.import_agrifootprint_db_functions import import_agrifootprint
+from ppplca.Actions.bw_base_set_up import bw_set_up, regionalize_db
 
-from app.Actions.CreateAgriActivities import CreateAgriActivities
-from app.Actions.CreateHeatActivities import CreateHeatActivities
+from ppplca.Actions.CreateAgriActivities import CreateAgriActivities
+from ppplca.Actions.CreateHeatActivities import CreateHeatActivities
 
 bd.projects.dir
 

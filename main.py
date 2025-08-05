@@ -3,11 +3,11 @@ import pandas as pd
 import bw2data as bd
 import lca_algebraic as agb
 
-from app.config import config
-from app.Models.ProductionStage import ProductionStage
-from app.Models.ValueChain import ValueChain
-from app.Actions.CreateParams import CreateParams
-from app.Models.LCA import LCA
+from ppplca.config import config
+from ppplca.Models.ProductionStage import ProductionStage
+from ppplca.Models.ValueChain import ValueChain
+from ppplca.Actions.CreateParams import CreateParams
+from ppplca.Models.LCA import LCA
 
 bd.projects.dir
 #Setting project name
