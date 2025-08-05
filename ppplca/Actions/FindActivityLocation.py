@@ -3,8 +3,10 @@ class FindActivityLocation:
     @staticmethod
     def isinEurope(country):
         from pandas import read_csv
+        import importlib.resources as resources
 
-        european_countries = read_csv("data/transport/European_countries.csv", sep = ";")
+        with resources.open_text("ppplca.data.transport","European_countries.csv") as f:
+            european_countries = read_csv(f, sep = ";")
         test = country in list(european_countries["Code"])
         return test
 

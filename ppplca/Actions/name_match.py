@@ -1,9 +1,12 @@
 import pandas as pd
+import importlib.resources as resources
+
 import bw2data as bd
 import math
 
 def get_country_match_df():
-    df_country = pd.read_excel(r'data/regionalization_setup/Country.xlsx', engine='openpyxl', sheet_name='Sheet1')
+    with resources.open_binary("ppplca.data.regionalization_setup", "Country.xlsx") as f:
+        df_country = pd.read_excel(f, engine='openpyxl', sheet_name='Sheet1')
     df_country.loc[df_country.Country == "Namibia", "ISO2"] = "NA"
     return df_country
 
@@ -45,7 +48,8 @@ residue_crop_dict = {crop_list[i]: residue_list[i] for i in range(len(crop_list)
 
 
 def get_lca_db_locations():
-    df_loc = pd.read_csv(r'data/regionalization_setup/Locations_in_lca_db_new.csv', encoding="latin1",sep=";")
+    with resources.open_text("ppplca.data.regionalization_setup","Locations_in_lca_db_new.csv") as f:
+        df_loc = pd.read_csv(f, encoding="latin1",sep=";")
     df_loc = df_loc.drop("Column1", axis=1)
     df_loc = df_loc.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     df_country = get_country_match_df()

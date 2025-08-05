@@ -8,6 +8,7 @@ class InstallCommand:
         self.publish_files("Processing_data.xlsx")
         self.publish_files("value_chains_test.xlsx")
         self.store_afdb_in_database_folder()
+        self.create_results_folder("Parametrized_LCA_results")
     
     @staticmethod
     def publish_files(filename):
@@ -55,3 +56,11 @@ class InstallCommand:
         shutil.copyfile(file_path, dest_path)
 
         print(f"✅ {file_name} has been copied to the 'Database' folder.")
+    
+    @staticmethod
+    def create_results_folder(folder_name):
+        import os
+
+        path = os.path.join(os.getcwd(), folder_name)
+        os.makedirs(path, exist_ok=True)
+        print(f"✅ Folder '{folder_name}' created at: {path}")

@@ -67,13 +67,18 @@ class CreateParams:
     @classmethod
     def createTransportParams(cls, production_stage, crop_name):
         from pandas import read_csv
+        import importlib.resources as resources
         from numpy import nan
         import lca_algebraic as agb
 
-        distances_european_countries = read_csv(f"data/transport/Distances_european_countries_final.csv", sep = ";", decimal = ".")
-        production_to_port_distance = read_csv(f"data/transport/Production_to_port_distance.csv", sep = ";", decimal = ".")
-        transport_between_ports = read_csv(f"data/transport/Transport_between_ports.csv", sep = ";", decimal = ".")
-        europe_distance_from_port = read_csv(f"data/transport/Europe_distance_from_port.csv", sep = ";", decimal = ".")
+        with resources.open_text("ppplca.data.transport","Distances_european_countries_final.csv") as f:
+            distances_european_countries = read_csv(f, sep = ";", decimal = ".")
+        with resources.open_text("ppplca.data.transport","Production_to_port_distance.csv") as f:
+            production_to_port_distance = read_csv(f, sep = ";", decimal = ".")
+        with resources.open_text("ppplca.data.transport","Transport_between_ports.csv") as f:
+            transport_between_ports = read_csv(f, sep = ";", decimal = ".")
+        with resources.open_text("ppplca.data.transport","Europe_distance_from_port.csv") as f:
+            europe_distance_from_port = read_csv(f, sep = ";", decimal = ".")
 
         params = []
 

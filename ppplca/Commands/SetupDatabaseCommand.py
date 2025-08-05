@@ -77,13 +77,19 @@ class SetupDatabaseCommand:
     @staticmethod
     def create_electricity_market_groups(eidb_reg):
         import pandas as pd
+        import importlib.resources as resources
         import numpy as np
 
-        electricity_share_CN_pea = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_pea.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_CN_soy = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_CN_wheat = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_US_soy = pd.read_csv("data/grid_shares/Electricity_grid_shares_US_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_US_wheat = pd.read_csv("data/grid_shares/Electricity_grid_shares_US_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        with resources.open_text("ppplca.data.grid_shares","Electricity_grid_shares_CN_pea.csv") as f:
+            electricity_share_CN_pea = pd.read_csv(f, sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        with resources.open_text("ppplca.data.grid_shares","Electricity_grid_shares_CN_soy.csv") as f:
+            electricity_share_CN_soy = pd.read_csv(f, sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        with resources.open_text("ppplca.data.grid_shares","Electricity_grid_shares_CN_wheat.csv") as f:
+            electricity_share_CN_wheat = pd.read_csv(f, sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        with resources.open_text("ppplca.data.grid_shares","Electricity_grid_shares_US_soy.csv") as f:
+            electricity_share_US_soy = pd.read_csv(f, sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        with resources.open_text("ppplca.data.grid_shares","Electricity_grid_shares_US_wheat.csv") as f:
+            electricity_share_US_wheat = pd.read_csv(f, sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64}) 
 
         SetupDatabaseCommand.create_electricity_market_group_processes("CN-SGCC",electricity_share_CN_pea,"Pea",eidb_reg)
         SetupDatabaseCommand.create_electricity_market_group_processes("CN-SGCC",electricity_share_CN_soy,"Soy",eidb_reg)
@@ -134,8 +140,10 @@ class SetupDatabaseCommand:
     @staticmethod
     def isinEurope(country):
         import pandas as pd
+        import importlib.resources as resources
 
-        european_countries = pd.read_csv("data/transport/European_countries.csv", sep = ";", dtype= {"Country": str, "Code": str})
+        with resources.open_text("ppplca.data.transport","European_countries.csv") as f:
+            european_countries = pd.read_csv(f, sep = ";", dtype= {"Country": str, "Code": str})
         test = country in list(european_countries["Code"])
         return test
     
