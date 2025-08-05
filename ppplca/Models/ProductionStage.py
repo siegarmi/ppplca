@@ -32,7 +32,7 @@ class ProductionStage:
         from ppplca.Actions.FindActivityLocation import FindActivityLocation
         from pandas import read_csv
 
-        activity_names = read_csv("Data input/input_files/activity_names/activity_names.csv", sep=";")
+        activity_names = read_csv("data/activity_names/activity_names.csv", sep=";")
 
         for exchange in self.exchanges:
             activity_key = exchange.name

@@ -52,7 +52,7 @@ class CreateParams:
         from pandas import read_excel
         import lca_algebraic as agb
 
-        input_parameters = read_excel('Data input/value_chains_and_processing_data/Processing_data.xlsx', sheet_name='General_parameters')
+        input_parameters = read_excel('Processing_data.xlsx', sheet_name='General_parameters')
         input_parameters_selected = input_parameters[input_parameters.iloc[:, 0] == product]
         input_parameters_selected = input_parameters_selected.reset_index(drop=True)
 
@@ -70,10 +70,10 @@ class CreateParams:
         from numpy import nan
         import lca_algebraic as agb
 
-        distances_european_countries = read_csv(f"Data input/input_files/transport/Distances_european_countries_final.csv", sep = ";", decimal = ".")
-        production_to_port_distance = read_csv(f"Data input/input_files/transport/Production_to_port_distance.csv", sep = ";", decimal = ".")
-        transport_between_ports = read_csv(f"Data input/input_files/transport/Transport_between_ports.csv", sep = ";", decimal = ".")
-        europe_distance_from_port = read_csv(f"Data input/input_files/transport/Europe_distance_from_port.csv", sep = ";", decimal = ".")
+        distances_european_countries = read_csv(f"data/transport/Distances_european_countries_final.csv", sep = ";", decimal = ".")
+        production_to_port_distance = read_csv(f"data/transport/Production_to_port_distance.csv", sep = ";", decimal = ".")
+        transport_between_ports = read_csv(f"data/transport/Transport_between_ports.csv", sep = ";", decimal = ".")
+        europe_distance_from_port = read_csv(f"data/transport/Europe_distance_from_port.csv", sep = ";", decimal = ".")
 
         params = []
 

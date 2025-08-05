@@ -1,46 +1,40 @@
-import bw2data as bd
-import bw2io as bi
-from ecoinvent_interface import Settings
-
-from ppplca.config import config
-import time
-import pandas as pd
-import numpy as np
-
-from ppplca.Actions.import_agrifootprint_db_functions import import_agrifootprint
-from ppplca.Actions.bw_base_set_up import bw_set_up, regionalize_db
-from ppplca.Actions.CreateAgriActivities import CreateAgriActivities
-from ppplca.Actions.CreateHeatActivities import CreateHeatActivities
-
 class SetupDatabaseCommand:
+
     def __init__(self):
         pass
 
-    @staticmethod
-    def start():
+    def handle(self):
+        import bw2data as bd
+        import time
+        from ppplca.config import config
+
         bd.projects.dir
         bd.projects.set_current(config('project.name'))
-        print("Database setup is starting, it will take around 24 hours to complete. Are you sure you want to continue? [Y/n]")
         answer = input("Database setup is starting, it will take around 24 hours to complete. Are you sure you want to continue? [Y/n]")
-        if (answer != "Y" or answer != "y"):
+        if answer.lower() != "y":
             current_time = time.localtime()
-            print(f"[{time.strftime("%H:%M:%S", current_time)}] Database setup aborted. Rerun the command...")
+            print(f"[{time.strftime('%H:%M:%S', current_time)}] Database setup aborted. Rerun the command...")
             return 
         print(f"Database setup is starting...")
         
-        start = time.start()
-        ei_name, bio_name = SetupDatabaseCommand.load_ecoinvent_database()
-        af_name = SetupDatabaseCommand.load_agrifootprint_database(ei_name, bio_name)
-        eidb_reg, afdb_reg = SetupDatabaseCommand.regionalize_databases(ei_name, af_name)
-        SetupDatabaseCommand.create_electricity_market_groups(eidb_reg)
-        SetupDatabaseCommand.create_agri_activities(eidb_reg, afdb_reg)
-        SetupDatabaseCommand.create_heat_activities(eidb_reg)
+        start = time.time()
+        ei_name, bio_name = self.load_ecoinvent_database()
+        af_name = self.load_agrifootprint_database(ei_name, bio_name)
+        eidb_reg, afdb_reg = self.regionalize_databases(ei_name, af_name)
+        self.create_electricity_market_groups(eidb_reg)
+        self.create_agri_activities(eidb_reg, afdb_reg)
+        self.create_heat_activities(eidb_reg)
 
-        end = time.end()
+        end = time.time()
         print(f"Database setup completed in {end - start} seconds.")
 
     @staticmethod
     def load_ecoinvent_database():
+        import bw2data as bd
+        import bw2io as bi
+        from ecoinvent_interface import Settings
+        from ppplca.config import config
+
         print("Loading ecoinvent database...")
         ei_name = "ecoinvent-3.10-cutoff"
         bio_name = "ecoinvent-3.10-biosphere"
@@ -58,6 +52,8 @@ class SetupDatabaseCommand:
 
     @staticmethod
     def load_agrifootprint_database(ei_name, bio_name):
+        from ppplca.Actions.import_agrifootprint_db_functions import import_agrifootprint
+
         import_agrifootprint(ei_name,bio_name)
 
         af_name = "agrifootprint 6.3 all allocations"
@@ -66,6 +62,9 @@ class SetupDatabaseCommand:
     
     @staticmethod
     def regionalize_databases(ei_name, af_name):
+        import bw2data as bd
+        from ppplca.Actions.bw_base_set_up import bw_set_up, regionalize_db
+
         bw_set_up()
         regionalize_db(ei_name)
         regionalize_db(af_name)
@@ -77,11 +76,14 @@ class SetupDatabaseCommand:
     
     @staticmethod
     def create_electricity_market_groups(eidb_reg):
-        electricity_share_CN_pea = pd.read_csv("Data input/input_files/grid_shares/Electricity_grid_shares_CN_pea.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_CN_soy = pd.read_csv("Data input/input_files/grid_shares/Electricity_grid_shares_CN_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_CN_wheat = pd.read_csv("Data input/input_files/grid_shares/Electricity_grid_shares_CN_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_US_soy = pd.read_csv("Data input/input_files/grid_shares/Electricity_grid_shares_US_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
-        electricity_share_US_wheat = pd.read_csv("Data input/input_files/grid_shares/Electricity_grid_shares_US_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        import pandas as pd
+        import numpy as np
+
+        electricity_share_CN_pea = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_pea.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        electricity_share_CN_soy = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        electricity_share_CN_wheat = pd.read_csv("data/grid_shares/Electricity_grid_shares_CN_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        electricity_share_US_soy = pd.read_csv("data/grid_shares/Electricity_grid_shares_US_soy.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
+        electricity_share_US_wheat = pd.read_csv("data/grid_shares/Electricity_grid_shares_US_wheat.csv", sep = ";", decimal = ".", dtype= {"Region": str, "Grid": str, "Area": np.float64, "Share": np.float64})
 
         SetupDatabaseCommand.create_electricity_market_group_processes("CN-SGCC",electricity_share_CN_pea,"Pea",eidb_reg)
         SetupDatabaseCommand.create_electricity_market_group_processes("CN-SGCC",electricity_share_CN_soy,"Soy",eidb_reg)
@@ -91,6 +93,7 @@ class SetupDatabaseCommand:
 
     @staticmethod
     def create_electricity_market_group_processes(country,grid_shares,product,db):
+
         if [act for act in db if "market group for electricity used in " + product + " processing, low voltage" == act["name"] and country[:2] in act["location"]] != []:
             print("Electricity market group for " + product + " processing in " + country[:2] + " already exists.")
         else:
@@ -117,7 +120,10 @@ class SetupDatabaseCommand:
 
     @staticmethod
     def create_agri_activities(eidb_reg, afdb_reg):
-        countries = pd.read_excel('Data input/value_chains_and_processing_data/value_chains_test.xlsx', sheet_name="Countries (don't change)")
+        import pandas as pd
+        from ppplca.Actions.CreateAgriActivities import CreateAgriActivities
+
+        countries = pd.read_excel('value_chains_test.xlsx', sheet_name="Countries (don't change)")
 
         crop_names = ["Peas","Soybeans","Wheat"]
         for country in countries["Code"]:
@@ -127,13 +133,18 @@ class SetupDatabaseCommand:
     
     @staticmethod
     def isinEurope(country):
-        european_countries = pd.read_csv("Data input/input_files/transport/European_countries.csv", sep = ";", dtype= {"Country": str, "Code": str})
+        import pandas as pd
+
+        european_countries = pd.read_csv("data/transport/European_countries.csv", sep = ";", dtype= {"Country": str, "Code": str})
         test = country in list(european_countries["Code"])
         return test
     
     @staticmethod
     def create_heat_activities(eidb_reg):
-        countries = pd.read_excel('Data input/value_chains_and_processing_data/value_chains_test.xlsx', sheet_name="Countries (don't change)")
+        import pandas as pd
+        from ppplca.Actions.CreateHeatActivities import CreateHeatActivities
+
+        countries = pd.read_excel('value_chains_test.xlsx', sheet_name="Countries (don't change)")
 
         for country in countries["Code"]:
             if country == "CN":

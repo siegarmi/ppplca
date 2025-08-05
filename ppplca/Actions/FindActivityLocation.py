@@ -4,7 +4,7 @@ class FindActivityLocation:
     def isinEurope(country):
         from pandas import read_csv
 
-        european_countries = read_csv("Data input/input_files/transport/European_countries.csv", sep = ";")
+        european_countries = read_csv("data/transport/European_countries.csv", sep = ";")
         test = country in list(european_countries["Code"])
         return test
 

@@ -14,6 +14,6 @@ class Country:
     
     def isinEurope(self):
         import pandas as pd
-        european_countries = pd.read_csv("Data input/input_files/transport/European_countries.csv", sep = ";", dtype= {"Country": str, "Code": str})
+        european_countries = pd.read_csv("data/transport/European_countries.csv", sep = ";", dtype= {"Country": str, "Code": str})
         test = self.iso2 in list(european_countries["Code"])
         return test

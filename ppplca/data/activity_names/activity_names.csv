@@ -1,0 +1,11 @@
+﻿key;name
+electricity_mix;market for electricity, low voltage
+heat_mix;heat production, natural gas, at boiler modulating >100kW
+tap_water;market for tap water
+wastewater;market for wastewater, average
+biowaste;market for biowaste
+ethanol;market for ethanol, without water, in 99.7% solution state, from ethylene
+sodium_hydroxide;market for sodium hydroxide, without water, in 50% solution state
+hydrochloric_acid;market for hydrochloric acid, without water, in 30% solution state
+hexane;market for hexane
+hexane_emissions;Hexane

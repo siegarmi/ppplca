@@ -868,7 +868,7 @@ def import_agrifootprint(ei_name,bio_name):
         
         migration_name = "agrifootprint-6-names"
         bi.Migration(migration_name).write(
-            json.load(open("C:/Users/arminsi/polybox - Armin Siegrist/ETH working folder/Parametric_LCA_plant_proteins_final/Data input/input_files/regionalization_setup/Agrifootprint_6_economic_new.json")),
+            json.load(open("C:/Users/arminsi/polybox - Armin Siegrist/ETH working folder/Parametric_LCA_plant_proteins_final/data/regionalization_setup/Agrifootprint_6_economic_new.json")),
             "Change names of agrifootprint activities",
         )
 

@@ -4,14 +4,14 @@ class CreateAgriActivities:
     def find_closest_cultivation_activity(production_location,crop_name):
         from pandas import read_csv
         
-        distances_european_countries = read_csv("Data input/input_files/transport/Distances_european_countries_final.csv", sep = ";", decimal = ".")
+        distances_european_countries = read_csv("data/transport/Distances_european_countries_final.csv", sep = ";", decimal = ".")
 
         if crop_name == "Peas":
-            production_countries = read_csv("Data input/input_files/production_countries/production_countries_pea_Europe.csv", sep = ";",header=None)[0].to_list()
+            production_countries = read_csv("data/production_countries/production_countries_pea_Europe.csv", sep = ";",header=None)[0].to_list()
         elif crop_name == "Soybeans":
-            production_countries = read_csv("Data input/input_files/production_countries/production_countries_soy_Europe.csv", sep = ";",header=None)[0].to_list()
+            production_countries = read_csv("data/production_countries/production_countries_soy_Europe.csv", sep = ";",header=None)[0].to_list()
         else:
-            production_countries = read_csv("Data input/input_files/production_countries/production_countries_wheat_Europe.csv", sep = ";",header=None)[0].to_list()
+            production_countries = read_csv("data/production_countries/production_countries_wheat_Europe.csv", sep = ";",header=None)[0].to_list()
 
         mean_distances = []
         for country in production_countries:

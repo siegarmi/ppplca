@@ -11,7 +11,7 @@ def load_config(file_path):
 
 def config(key):
     keys = key.split('.')  # Split the dot-separated string into a list of keys
-    value = load_config('config/config.ini')
+    value = load_config('config.ini')
     
     for k in keys:
         if isinstance(value, dict) and k in value:

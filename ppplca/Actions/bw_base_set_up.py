@@ -45,7 +45,7 @@ def bw_generate_new_biosphere_data_water(bio_act_list, new_bio_name):
 def bw_add_lcia_method_aware():
     flows_list = []
 
-    df = pd.read_csv(r'Data input/input_files/regionalization_setup/cf_aware_processed.csv',encoding="latin1", sep = ";")
+    df = pd.read_csv(r'data/regionalization_setup/cf_aware_processed.csv',encoding="latin1", sep = ";")
     df = df.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     df = df.drop("Column1",axis=1)
     df['Location'] = df['Location'].fillna('NA')
@@ -104,13 +104,13 @@ def bw_add_lcia_method_biodiversity():
     flows_occ_list = []
     flows_tra_list = []
 
-    df = pd.read_csv(r'Data input/input_files/regionalization_setup/cf_biodiversity_processed_new.csv', encoding="latin1", sep=";", index_col=0)
+    df = pd.read_csv(r'data/regionalization_setup/cf_biodiversity_processed_new.csv', encoding="latin1", sep=";", index_col=0)
     df.index.name = None
     df = df.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     df['Location'] = df['Location'].fillna('NA')
 
     new_bio_db = bd.Database('biosphere luluc regionalized')
-    df_loc = pd.read_csv(r'Data input/input_files/regionalization_setup/Scherer_land_use_match.csv')
+    df_loc = pd.read_csv(r'data/regionalization_setup/Scherer_land_use_match.csv')
     df_check = pd.DataFrame()
     for flow in new_bio_db:
         loc = flow.get('location')
@@ -195,9 +195,9 @@ def bw_generate_new_biosphere_data_pm(bio_act_list, new_bio_name):
 
 def bw_add_lcia_method_pm():
     flows_list = []
-    df = pd.read_csv(r'Data input/input_files/regionalization_setup/cf_pm_image_regions.csv', sep = ";")
+    df = pd.read_csv(r'data/regionalization_setup/cf_pm_image_regions.csv', sep = ";")
     df = df.fillna(0)
-    eidb_310_to_image_conversion = pd.read_csv(r'Data input/input_files/regionalization_setup/Ecoinvent_310_to_IMAGE_conversion.csv', encoding="latin1",sep=";", keep_default_na=False)
+    eidb_310_to_image_conversion = pd.read_csv(r'data/regionalization_setup/Ecoinvent_310_to_IMAGE_conversion.csv', encoding="latin1",sep=";", keep_default_na=False)
     eidb_310_to_image_conversion = eidb_310_to_image_conversion.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     new_bio_db = bd.Database(f'biosphere pm regionalized')
     for flow in new_bio_db:
