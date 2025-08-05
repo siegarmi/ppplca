@@ -1,0 +1,23 @@
+[project]
+name = "ppplca"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = "3.12"
+dependencies = [
+    "numpy (>=1.26)",
+    "pandas (>=2.2)",
+    "bw2data (>=3.6)",
+    "bw2io (>=0.8)",
+    "lca__algebraic (>=1.1)",
+    "matplotlib (>=3.9)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
