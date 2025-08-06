@@ -3,7 +3,8 @@ name = "ppplca"
 version = "0.2.0"
 description = ""
 authors = [
-    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch"}
+    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch", url = "https://github.com/siegarmi" }
+    {name = "Paride Azzari",email = "paride21azzari@gmail.com", url = "https://github.com/azzarip" }
 ]
 license = {text = "MIT"}
 readme = "README.md"
@@ -13,8 +14,9 @@ dependencies = [
     "pandas (>=2.2)",
     "bw2data (>=3.6)",
     "bw2io (>=0.8)",
-    "lca__algebraic (>=1.1)",
+    "lca_algebraic (>=1.1)",
     "matplotlib (>=3.9)"
+    "ecoinvent_interface (==2.5)"
 ]
 
 include = [
