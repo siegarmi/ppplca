@@ -4,6 +4,22 @@ This repository contains the model code and required input data files for parame
 
 This repository is currently only public for review purposes. Once the corresponding publication is published, the code and related documents will be made available for public use with an MIT license.
 
+## Install 
+
+```bash
+pip install ppplca`
+```
+
+Then in the project folder run
+```python
+import ppplca
+
+ppplca.install()
+```
+
+
+....
+
 ## The model
 
 Currently, the model is designed to calculate environmental impacts for the value chains of pea protein isolate (PPI) and concentrate (PPC), soy protein isolate (SPI) and concentrate (SPC), and wheat gluten (WG).
