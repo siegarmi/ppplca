@@ -15,7 +15,7 @@ dependencies = [
     "bw2data (>=3.6)",
     "bw2io (>=0.8)",
     "lca_algebraic (>=1.1)",
-    "matplotlib (>=3.9)"
+    "matplotlib (>=3.9)",
     "ecoinvent_interface (==2.5)"
 ]
 
