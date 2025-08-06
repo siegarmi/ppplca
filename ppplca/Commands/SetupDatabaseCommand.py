@@ -39,6 +39,8 @@ class SetupDatabaseCommand:
         ei_name = "ecoinvent-3.10-cutoff"
         bio_name = "ecoinvent-3.10-biosphere"
         my_settings = Settings(username=config('database.username'), password=config('database.password'))
+        print(my_settings.username)
+        print(my_settings.password)
         if ei_name in bd.databases and bio_name in bd.databases:
             print(ei_name + " and " + bio_name + " have already been imported.")
         elif ei_name in bd.databases and not bio_name in bd.databases:
