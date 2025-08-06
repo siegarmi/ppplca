@@ -3,8 +3,8 @@ name = "ppplca"
 version = "0.2.1"
 description = ""
 authors = [
-    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch", url = "https://github.com/siegarmi" },
-    {name = "Paride Azzari",email = "paride21azzari@gmail.com", url = "https://github.com/azzarip" }
+    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch"},
+    {name = "Paride Azzari",email = "paride21azzari@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
@@ -27,3 +27,6 @@ include = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+Repository = "https://github.com/siegarmi/ppplca"
