@@ -8,7 +8,8 @@ class InstallCommand:
         self.publish_files("Processing_data.xlsx")
         self.publish_files("value_chains_test.xlsx")
         self.store_afdb_in_database_folder()
-        self.create_results_folder("Parametrized_LCA_results")
+        self.create_folder("Parametrized_LCA_results")
+        self.create_folder("Figures")
     
     @staticmethod
     def publish_files(filename):
@@ -51,14 +52,14 @@ class InstallCommand:
         os.makedirs(database_dir, exist_ok=True)
 
         # Copy the selected CSV to the Database folder
-        file_name = os.path.basename(file_path)
+        file_name = "agrifootprint_6_3_all_allocations.csv"
         dest_path = os.path.join(database_dir, file_name)
         shutil.copyfile(file_path, dest_path)
 
         print(f"✅ {file_name} has been copied to the 'Database' folder.")
     
     @staticmethod
-    def create_results_folder(folder_name):
+    def create_folder(folder_name):
         import os
 
         path = os.path.join(os.getcwd(), folder_name)
