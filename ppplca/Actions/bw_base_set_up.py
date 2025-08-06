@@ -6,9 +6,9 @@ from copy import deepcopy
 import re
 
 from ppplca.Actions.name_match import get_lca_db_locations
+from ppplca.config import config
 
-project = "Parametrized LCA final"
-bd.projects.set_current(project)
+bd.projects.set_current(config('project.name'))
 bio3 = bd.Database("ecoinvent-3.10-biosphere")
 
 def get_image_region(location,conversion_list):
