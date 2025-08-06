@@ -32,6 +32,7 @@ class InstallCommand:
         from tkinter import Tk, filedialog
 
         print("Publishing database folder...")
+        print("Look for pop-up window to select the CSV file.")
 
         # Hide the main Tkinter window
         root = Tk()
