@@ -36,6 +36,9 @@ class InstallCommand:
         # Hide the main Tkinter window
         root = Tk()
         root.withdraw()
+        root.lift()
+        root.attributes('-topmost', True)
+        root.after_idle(root.attributes, '-topmost', False)
 
         # Open a file dialog to select a CSV file
         file_path = filedialog.askopenfilename(
