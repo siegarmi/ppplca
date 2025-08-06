@@ -45,10 +45,13 @@ def bw_generate_new_biosphere_data_water(bio_act_list, new_bio_name):
 
 def bw_add_lcia_method_aware():
     flows_list = []
-    with resources.open_text("ppplca.data.regionalization_setup","cf_aware_processed.csv", encoding="latin1") as f:
-        df = pd.read_csv(f, encoding="latin1", sep=",")
+    from importlib.resources import files
+    import ppplca.data.regionalization_setup as data_pkg
+
+    path = files(data_pkg).joinpath("cf_aware_processed.csv")
+    with path.open(encoding="latin1") as f:
+        df = pd.read_csv(f, sep=",")
     df = df.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
-    df = df.map(lambda x: x.replace('Ã¼', 'ü') if isinstance(x, str) else x)
     df = df.drop("Column1",axis=1)
     df['Location'] = df['Location'].fillna('NA')
 
