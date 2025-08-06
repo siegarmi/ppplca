@@ -45,7 +45,7 @@ def bw_generate_new_biosphere_data_water(bio_act_list, new_bio_name):
 
 def bw_add_lcia_method_aware():
     flows_list = []
-    with resources.open_text("ppplca.data.regionalization_setup","cf_aware_processed.csv") as f:
+    with resources.open_text("ppplca.data.regionalization_setup","cf_aware_processed.csv", encoding="latin1") as f:
         df = pd.read_csv(f, encoding="latin1", sep=";")
     df = df.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     df = df.drop("Column1",axis=1)
@@ -105,7 +105,7 @@ def bw_add_lcia_method_biodiversity():
     flows_occ_list = []
     flows_tra_list = []
 
-    with resources.open_text("ppplca.data.regionalization_setup","cf_biodiversity_processed_new.csv") as f:
+    with resources.open_text("ppplca.data.regionalization_setup","cf_biodiversity_processed_new.csv", encoding="latin1") as f:
         df = pd.read_csv(f, encoding="latin1", sep=";", index_col=0)
     df.index.name = None
     df = df.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
@@ -201,7 +201,7 @@ def bw_add_lcia_method_pm():
     with resources.open_text("ppplca.data.regionalization_setup","cf_pm_image_regions.csv") as f:
         df = pd.read_csv(f, sep = ";")
     df = df.fillna(0)
-    with resources.open_text("ppplca.data.regionalization_setup","Ecoinvent_310_to_IMAGE_conversion.csv") as f:
+    with resources.open_text("ppplca.data.regionalization_setup","Ecoinvent_310_to_IMAGE_conversion.csv", encoding="latin1") as f:
         eidb_310_to_image_conversion = pd.read_csv(f, encoding="latin1",sep=";", keep_default_na=False)
     eidb_310_to_image_conversion = eidb_310_to_image_conversion.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
     new_bio_db = bd.Database(f'biosphere pm regionalized')

@@ -48,7 +48,7 @@ residue_crop_dict = {crop_list[i]: residue_list[i] for i in range(len(crop_list)
 
 
 def get_lca_db_locations():
-    with resources.open_text("ppplca.data.regionalization_setup","Locations_in_lca_db_new.csv") as f:
+    with resources.open_text("ppplca.data.regionalization_setup","Locations_in_lca_db_new.csv", encoding="latin1") as f:
         df_loc = pd.read_csv(f, encoding="latin1",sep=";")
     df_loc = df_loc.drop("Column1", axis=1)
     df_loc = df_loc.map(lambda x: x.replace('__', ',') if isinstance(x, str) else x)
