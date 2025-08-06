@@ -13,13 +13,19 @@ This repository contains the model code and required input data files for parame
 pip install ppplca`
 ```
 
-Then in the project folder run
+Then in the project folder run:
 ```python
 import ppplca
 
 ppplca.install()
 ```
-This 
+This creates all the necessary sub-folders in the project folder, loads the config.ini file, the excel file containing the process parameters, the excel file to define the value chains that should be calculated, and asks you to locate the agrifootprint database to store it in the created Database folder with the correct name.
+
+After defining the parameters in the config.ini file, the value chains, and optionally changing parameter values, run:
+```python
+ppplca.setup()
+```
+
 
 
 ....
