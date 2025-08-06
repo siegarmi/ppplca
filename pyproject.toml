@@ -3,7 +3,7 @@ name = "ppplca"
 version = "0.2.1"
 description = ""
 authors = [
-    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch", url = "https://github.com/siegarmi" }
+    {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch", url = "https://github.com/siegarmi" },
     {name = "Paride Azzari",email = "paride21azzari@gmail.com", url = "https://github.com/azzarip" }
 ]
 license = {text = "MIT"}
