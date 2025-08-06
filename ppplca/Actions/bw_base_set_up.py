@@ -54,6 +54,7 @@ def bw_add_lcia_method_aware():
     new_bio_db = bd.Database('biosphere water regionalized')
     for flow in new_bio_db:
         loc = flow.get('location')
+        print(loc)
         if 'irrigation' in flow.get('name'):
             cf = df.loc[df.Location == loc, 'Agg_CF_irri'].iloc[0]
         else:
