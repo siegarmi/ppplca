@@ -3,6 +3,7 @@ import bw2io as bi
 import json
 import re
 import functools
+from importlib import resources
 from bw2data import Database, config
 from bw2io.strategies.generic import set_code_by_activity_hash
 from bw2io.strategies import (
@@ -852,7 +853,7 @@ def write_unlinked_biosphere(db):
     db.add_unlinked_flows_to_biosphere_database(ag_bio_name)
 
 def import_agrifootprint(ei_name,bio_name):
-    af_path = "C:/Users/arminsi/polybox - Armin Siegrist/ETH working folder/Parametric_LCA_plant_proteins_final/Databases/agrifootprint_6_3_all_allocations.csv"
+    af_path = "Database/agrifootprint_6_3_all_allocations.csv"
     af_name = "agrifootprint 6.3 all allocations"
     bio3 = bd.Database("ecoinvent-3.10-biosphere")
     if af_name in bd.databases:
@@ -867,10 +868,11 @@ def import_agrifootprint(ei_name,bio_name):
         
         
         migration_name = "agrifootprint-6-names"
-        bi.Migration(migration_name).write(
-            json.load(open("C:/Users/arminsi/polybox - Armin Siegrist/ETH working folder/Parametric_LCA_plant_proteins_final/../data/regionalization_setup/Agrifootprint_6_economic_new.json")),
-            "Change names of agrifootprint activities",
-        )
+        with resources.open_text("ppplca.data.regionalization_setup", "Agrifootprint_6_economic_new.json") as f:
+            bi.Migration(migration_name).write(
+                json.load(f),
+                "Change names of agrifootprint activities",
+            )
 
         soil_agri_list = [act['name'] for act in bio3 if "agricultural" in act['categories']]
         soil_list = [act['name'] for act in bio3 if ('soil',) == act['categories']]
