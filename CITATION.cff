@@ -1,0 +1,13 @@
+cff-version: 0.1.1
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Siegrist
+    given-names: Armin
+    orcid: https://orcid.org/0009-0000-2771-1644
+  - family-names: Azzari
+    given-names: Paride
+    orcid: https://orcid.org/0000-0001-5400-1576
+title: "ppplca - A Python Package for parameterized plant protein life cycle assessments"
+version: 0.2.16 
+date-released: 2024-07-08
+url: "https://github.com/siegarmi/ppplca"
