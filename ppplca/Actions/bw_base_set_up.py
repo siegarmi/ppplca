@@ -54,7 +54,6 @@ def bw_add_lcia_method_aware():
     new_bio_db = bd.Database('biosphere water regionalized')
     for flow in new_bio_db:
         loc = flow.get('location')
-        print(loc)
         if 'irrigation' in flow.get('name'):
             cf = df.loc[df.Location == loc, 'Agg_CF_irri'].iloc[0]
         else:
@@ -385,7 +384,7 @@ def regionalize_db(db_name):
 
         # flag_db = ei.metadata.get("regionalized", False)
         # if not flag_db:
-        print('start regionalizing water and land flows')
+        print('start regionalizing water, land, and pm flows')
         water_use_list = [act for act in bio if "Water" in act['name']
                           and 'natural resource' in act['categories']
                           and 'air' not in act['name']

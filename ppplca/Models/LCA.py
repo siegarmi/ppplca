@@ -206,9 +206,9 @@ class LCA:
 
         res_contribution, res_contribution_protein = self.getContributionResults()
         res_contribution.to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_results_contribution_analysis.csv", index=True)
-        #res_contribution_protein.to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_results_contribution_analysis_protein.csv", index=True)
+        res_contribution_protein.to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_results_contribution_analysis_protein.csv", index=True)
 
-        #self.getParameterValues().to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_parameter_values.csv", index=True)
+        self.getParameterValues().to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_parameter_values.csv", index=True)
 
         self.sobol_indices.to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_sobol_indices.csv", index=True)
         self.sobol_indices_total.to_csv(f"Parametrized_LCA_results/{ValueChain.product}_{ValueChain.location_string}_sobol_indices_total.csv", index=True)
