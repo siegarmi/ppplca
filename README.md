@@ -1,4 +1,4 @@
-# ppplca (short for parametric plant protein life cycle assessment)
+# ppplca (parametric plant protein life cycle assessment)
 
 This repository contains the model code and required input data files for parametric LCAs of plant protein value chains based on variable process parameters and geographical locations.
 
@@ -6,29 +6,42 @@ This repository contains the model code and required input data files for parame
 
 - [ecoinvent](https://ecoinvent.org/) license (username & password)
 - [Agrifootprint](https://blonksustainability.nl/agri-footprint) v6.3 database in a Simapro.csv format
+- python >=3.12
 
 ## Install 
 
 ```bash
-pip install ppplca`
+pip install ppplca
 ```
 
-Then in the project folder run:
+## Run
+
+In the project folder run:
 ```python
 import ppplca
 
 ppplca.install()
 ```
-This creates all the necessary sub-folders in the project folder, loads the config.ini file, the excel file containing the process parameters, the excel file to define the value chains that should be calculated, and asks you to locate the agrifootprint database to store it in the created Database folder with the correct name.
+This creates all the necessary sub-folders in the project folder, loads the config.ini file, the excel file containing the process parameters, the excel file to define the value chains that should be calculated, and asks you to locate the agrifootprint database to store it in the created Database folder.
 
-After defining the parameters in the config.ini file, the value chains, and optionally changing parameter values, run:
+After defining the parameters in the config.ini file, choosing the value chains, and optionally changing parameter values, run:
 ```python
 ppplca.setup()
 ```
+This sets up a brightway2 project, loads and links the econivent and agrifootprint databases, regionalizes them, and creates necessary processes such as cultivation, electricity mixes, and heat production. The regionalization of the databases can take up to 24 hours.
 
-
-
-....
+After the setup is finished, run:
+```python
+ppplca.run()
+```
+This yields environmental impacts (see below for more details) for the defined value chains based on multiple Monte-Carlo simulations or single runs depending on the value defined in config.ini. They are stored in the folder Parametrized_LCA_results. Specifically, it provides the following files for each value chain:
+- Overall results for each Monte-Carlo iteration based on 1 kg product
+- Overall results for each Monte-Carlo iteration based on 1 kg protein
+- Contribution analysis based on 1 kg product
+- Contribution analysis based on 1 kg protein
+- First order Sobol-indices (global sensitivity analysis)
+- Total Sobol-indices
+- Parameter values for each iteration
 
 ## The model
 
@@ -46,11 +59,11 @@ They system boundaries can be chosen flexibly based on the following processes:
 
 ### Geographical scope
 
-The geographical scope includes all European countries for the processing steps. Countries for cultivation are principally limited by the coverage of the Agrifootprint database. However, there is a function implemented that creates cultivation processes based on the closest available country in the Agrifootprint database by adapting, e.g., electricity mixes but not local conditions such as the availability of peat soils. Additionally, the US is available for the cultivation and processing of soy, Brazil for the cultivation of soy, and China for the cultivation and processing of pea, soy, and wheat. For processing in the US or China, no transport between the cultivation and processing facility can be modelled currently (assumption that it is nearby or on the way to the port).
+The geographical scope includes all European countries for the processing steps. Countries for cultivation are principally limited by the coverage of the Agrifootprint database. However, there is a function implemented that creates cultivation processes based on the closest available country in the Agrifootprint database by adapting, e.g., electricity mixes but not local conditions such as the availability of peat soils. Additionally, the US is available for the cultivation and processing of soy and wheat, Brazil for the cultivation and processing of soy, and China for the cultivation and processing of pea, soy, and wheat. For processing in Brazil, China, or the US no transport between the cultivation and processing facility can be modelled currently (assumption that it is nearby or on the way to the port).
 
 ### Functional units
 
-Currently, a mass- and protein-based functional unit can be selected. Variable protien contents of the final product can be accounted for when using a protein-based functional unit.
+Currently, a mass- and protein-based functional are used. Variable protein contents in the final product are considered when using a protein-based functional unit
 
 ### Multi-functionality
 
@@ -64,36 +77,27 @@ Currently, the model calculates environmental impacts based on regional characte
 
 The model is based on the [Brightway 2](https://github.com/brightway-lca/brightway2) library and [lca_algebraic](https://github.com/oie-mines-paristech/lca_algebraic/).
 
-The model relies on [ecoinvent](https://ecoinvent.org/) as a background database. Therefore, an ecoinvent license is required to use the model. For agricultural processes, the model currently relies on processes from the [Agrifootprint](https://blonksustainability.nl/agri-footprint) v6.3 database. However, the model can be modified to use agricultural processes from other databases or self-created inventories (see possible adjustments below).
+The code for loading the agrifootprint database and regionalizing the databases is based on work of [Jing et al. (2024)](https://doi.org/10.1021/acs.est.4c03005).
 
-## How to use the model?
-
-1. Pull the entire folder from GitHub
-
-2. Install the necessary python environments from the provided yaml files. For this you can run the following line in your terminal for each environment:
-
-`conda env create -f your_folder_path/Parametric_LCA_plant_proteins/environment_name.yaml`
-
-3. Change the path to your folder location in the beginning of the files "Parametrized_LCA_script.py" and "Figures_parametrized_LCA.ipynb" in the folder Code.
-
-4. Specify the value chains you want to model in "Data input" --> "Input files value chains" --> "Value_chains.xlsx". Save the file as "Value_chains.csv" in "Data input" --> "Input_files_csv" --> "Parameterized_model
-
-5. If used, save the Agrifootprint database as "agrifootprint_6_3_all_allocations.csv" in the folder "Databases. Other versions of the database should work too, but might need adjustments in the file "import_agrifootprint_db_functions.py"
-
-6. Run the python script "Parametrized_LCA_script.py" in the folder "Code". The results will be stored in the "Parametrized_LCA_results" folder. A file indicating the changes that have been made will be stored in the folder "Track_change".
-
-7. If you wish, you can use the functions of "Figures_parametrized_LCA.ipynb" to visualize your results. They might need to be adjusted if the number of value chains changes significantly for optimal visualization.
+The regionalization further required input data from [Scherer et al. (2023)](https://doi.org/10.1021/acs.est.3c04191), [Boulay et al. (2018)](https://doi.org/10.1007/s11367-017-1333-8), and [Oberschelp et al. (2020)](https://dx.doi.org/10.1021/acs.est.0c05691).
 
 ## Possible adjustments of the model for further applications
 
 1. Use different cultivation activities instead of the ones provided in the Agrifootprint database to cover more countries, increase the resolution to a sub-country level, or investigate different cultivation practices deviating from the average cultivation.
 
-This would require changing lines 141-142 and 190-196 in "Parametrized_LCA_script.py" as well as the depending functions.
-
 2. Expand the transport to other countries apart from Europe and the production locations in Brazil, China, and the US to model value chains outside of the European context or add more supplying countries.
 
-This would require to update the .csv files in the folder "Data input" --> Input_files_csv" --> "transport" based on the approach described in the manuscript (...) (or any other approach). Further, the tab "Countries" in the file "Value_chains.xlsx" in "Data input" --> "Input files value chains" would need to be updated to include the updated list of possible countries.
+This would require to update the .csv files in the folder "data" --> "transport" based on the approach described in the manuscript (...) (or any other approach). Further, the tab "Countries" in the file "Value_chains.xlsx" that is loaded with
+```python
+
+ppplca.install()
+```
+would need to be updated to include the updated list of possible countries.
 
 3. Conduct LCAs for different products or update the process parameters for the available processes.
 
-This would require different model parameters tailored to the products of interest. They can be set up as shown for pea, soy, and wheat proteins in the excel file "Processing_data.xlsx" in the folder "Data input" --> "Input files value chains". There also process parameters can be updated. Afterwards the model parameters and the Formulas must be saved as .csv files in the folder "Data input" --> "Input_files_csv" --> "Parameterized_model"
+This would require different model parameters tailored to the products of interest. They can be set up as shown for pea, soy, and wheat proteins in the excel file "Processing_data.xlsx" that is loaded with
+```python
+
+ppplca.install()
+```
