@@ -39,10 +39,7 @@ class LCA:
         params = self.parameters #required by the eval() function
 
         for _, production_stage in reversed(list(ValueChain.production_stages.items())[1:]):
-            print(production_stage.name)
-
             for exchange in production_stage.exchanges:
-                print(exchange.name)
                 if "input" in exchange.name and "allocation" not in exchange.name or "transport" in exchange.name:
                     if "input" in exchange.name:
                         input_amounts.append(exchange.formula)
@@ -180,9 +177,6 @@ class LCA:
         self.results_overall_protein = self.results_overall.copy()
         self.results_overall_protein = self.results_overall_protein.div(protein_content_extract, axis=0)
 
-        self.results_overall.to_csv(f"Parametrized_LCA_results/test.csv",index=True)
-
-
     def calculateSobolIndices(self):
         import lca_algebraic as agb
         import pandas as pd
@@ -198,8 +192,6 @@ class LCA:
             self.total_inventory,
             self.impact_categories,
             functional_unit=functional_value)
-
-        print(oat_matrix)
 
         oat_matrix.index.tolist()
         self.sobol_indices = pd.DataFrame(sobol_indices.s1,columns = self.impact_categories, index = oat_matrix.index.tolist())
