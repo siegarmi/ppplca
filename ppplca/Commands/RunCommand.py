@@ -77,7 +77,11 @@ class RunCommand:
             params = agb.all_params()
 
             for i in range(1,len(value_chain_data),2):
-                stage_name, stage = self.load_production_stages(i, value_chain_data, formulas, ValueChain_, ei_reg_name, af_reg_name, bio_name, user_db, params)
+                result = self.load_production_stages(i, value_chain_data, formulas, ValueChain_, ei_reg_name, af_reg_name, bio_name, user_db, params)
+                if result is None:
+                    continue
+                else:
+                    stage_name, stage = result
                 ValueChain_.addStage(stage_name,stage)
 
             self.LCA_calculations(ValueChain_, params, user_db)
