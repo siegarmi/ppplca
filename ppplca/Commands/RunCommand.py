@@ -81,7 +81,7 @@ class RunCommand:
                 if result is None:
                     continue
                 else:
-                    stage_name, stage = result
+                    stage_name, stage, params = result
                 ValueChain_.addStage(stage_name,stage)
 
             self.LCA_calculations(ValueChain_, params, user_db)
@@ -135,7 +135,7 @@ class RunCommand:
         print(f'Creating activity for {stage_name}.')
         stage.createForegroundActivities(user_db, params)
 
-        return stage_name, stage
+        return stage_name, stage, params
             
     
     @staticmethod

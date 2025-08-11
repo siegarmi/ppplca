@@ -199,6 +199,8 @@ class LCA:
             self.impact_categories,
             functional_unit=functional_value)
 
+        print(oat_matrix)
+
         oat_matrix.index.tolist()
         self.sobol_indices = pd.DataFrame(sobol_indices.s1,columns = self.impact_categories, index = oat_matrix.index.tolist())
         self.sobol_indices_total = pd.DataFrame(sobol_indices.st,columns = self.impact_categories, index = oat_matrix.index.tolist())
