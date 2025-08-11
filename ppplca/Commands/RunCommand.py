@@ -8,7 +8,7 @@ class RunCommand:
         af_reg_name, ei_reg_name, bio_name = self.set_database_names()
         self.check_databases(af_reg_name, ei_reg_name)
         value_chains_data = self.import_value_chains(file,sheet_name)
-        self.analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data)
+        self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data)
 
     @staticmethod
     def set_project_name():
@@ -48,8 +48,6 @@ class RunCommand:
             value_chains_data = pd.read_excel(file, sheet_name=sheet_name)
         else:
             value_chains_data = pd.read_excel(file, sheet_name=0)
-        
-        print(value_chains_data)
 
         return value_chains_data
     
