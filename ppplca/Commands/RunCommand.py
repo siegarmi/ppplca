@@ -48,7 +48,9 @@ class RunCommand:
             value_chains_data = pd.read_excel(file, sheet_name=sheet_name)
         else:
             value_chains_data = pd.read_excel(file, sheet_name=0)
-            
+        
+        print(value_chains_data)
+
         return value_chains_data
     
     def analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data):
