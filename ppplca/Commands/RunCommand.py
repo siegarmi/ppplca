@@ -141,6 +141,8 @@ class RunCommand:
     @staticmethod
     def LCA_calculations(ValueChain_, params, user_db):
         import numpy as np
+        import matplotlib
+        matplotlib.use("Agg")
         import lca_algebraic as agb
         from ppplca.config import config
 

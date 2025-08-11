@@ -179,7 +179,10 @@ class LCA:
 
         self.results_overall_protein = self.results_overall.copy()
         self.results_overall_protein = self.results_overall_protein.div(protein_content_extract, axis=0)
-    
+
+        self.results_overall.to_csv(f"Parametrized_LCA_results/test.csv",index=True)
+
+
     def calculateSobolIndices(self):
         import lca_algebraic as agb
         import pandas as pd
@@ -187,14 +190,14 @@ class LCA:
         functional_value = 1
 
         oat_matrix = agb.oat_matrix(
-        self.total_inventory,
-        self.impact_categories,
-        functional_unit=functional_value)
+            self.total_inventory,
+            self.impact_categories,
+            functional_unit=functional_value)
 
         sobol_indices = agb.incer_stochastic_matrix(
-        self.total_inventory,
-        self.impact_categories,
-        functional_unit=functional_value)
+            self.total_inventory,
+            self.impact_categories,
+            functional_unit=functional_value)
 
         oat_matrix.index.tolist()
         self.sobol_indices = pd.DataFrame(sobol_indices.s1,columns = self.impact_categories, index = oat_matrix.index.tolist())
