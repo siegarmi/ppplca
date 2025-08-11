@@ -19,5 +19,5 @@ def run(file="value_chains_test.xlsx", sheet_name = None):
         print("Please update the filese before running the setup.")
         return
     from ppplca.Commands.RunCommand import RunCommand
-    rundatabasecommand = RunCommand(file, sheet_name)
-    rundatabasecommand.handle()
+    rundatabasecommand = RunCommand()
+    rundatabasecommand.handle(file, sheet_name)
