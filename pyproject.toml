@@ -15,7 +15,7 @@ dependencies = [
     "brightway2 (>=2.4)",
     "matplotlib (>=3.9)",
     "ecoinvent_interface (==3.1)",
-    "forked_lca-algebraic @ git+https://github.com/siegarmi/lca_algebraic"
+    "lca-algebraic @ git+https://github.com/siegarmi/lca_algebraic"
 ]
 
 include = [
