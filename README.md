@@ -28,12 +28,19 @@ After defining the parameters in the config.ini file, choosing the value chains,
 ```python
 ppplca.setup()
 ```
-This sets up a brightway2 project, loads and links the econivent and agrifootprint databases, regionalizes them, and creates necessary processes such as cultivation, electricity mixes, and heat production. The regionalization of the databases can take up to 24 hours.
+This sets up a brightway2 project, loads and links the econivent and agrifootprint databases, regionalizes them, and creates necessary processes such as cultivation, electricity mixes, and heat production. The regionalization of the databases can take up to 48 hours on a regular laptop.
 
 After the setup is finished, run:
 ```python
 ppplca.run()
 ```
+or if you want to select your own excel file to specify the value chains:
+```python
+ppplca.run('filename.xlsx', sheet=None)
+# filename.xlsx must be located in working directory
+# The first sheet will be loaded for analysis unless specified either by number or worksheet name.
+```
+
 This yields environmental impacts (see below for more details) for the defined value chains based on multiple Monte-Carlo simulations or single runs depending on the value defined in config.ini. They are stored in the folder Parametrized_LCA_results. Specifically, it provides the following files for each value chain:
 - Overall results for each Monte-Carlo iteration based on 1 kg product
 - Overall results for each Monte-Carlo iteration based on 1 kg protein

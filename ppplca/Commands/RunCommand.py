@@ -3,11 +3,11 @@ class RunCommand:
     def __init__(self):
         pass
 
-    def handle(self,value_chains_data):
+    def handle(self,file,sheet_name):
         self.set_project_name()
         af_reg_name, ei_reg_name, bio_name = self.set_database_names()
         self.check_databases(af_reg_name, ei_reg_name)
-        value_chains_data = self.import_value_chains()
+        value_chains_data = self.import_value_chains(file,sheet_name)
         self.analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data)
 
     @staticmethod
@@ -39,10 +39,16 @@ class RunCommand:
             raise ValueError("Databases not found.")
     
     @staticmethod
-    def import_value_chains():
+    def import_value_chains(file, sheet_name = None):
         import pandas as pd
 
-        value_chains_data = pd.read_excel('value_chains_test.xlsx', sheet_name='Value_chains')
+        if file == "value_chains_test.xlsx":
+            value_chains_data = pd.read_excel(file, sheet_name='Value_chains')
+        elif sheet_name:
+            value_chains_data = pd.read_excel(file, sheet_name=sheet_name)
+        else:
+            value_chains_data = pd.read_excel(file, sheet_name=0)
+            
         return value_chains_data
     
     def analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data):

@@ -10,7 +10,7 @@ class SetupDatabaseCommand:
 
         bd.projects.dir
         bd.projects.set_current(config('project.name'))
-        answer = input("Database setup is starting, it will take around 24 hours to complete. Are you sure you want to continue? [Y/n]")
+        answer = input("Database setup is starting, it will take around 48 hours to complete on a regular laptop. Are you sure you want to continue? [Y/n]")
         if answer.lower() != "y":
             current_time = time.localtime()
             print(f"[{time.strftime('%H:%M:%S', current_time)}] Database setup aborted. Rerun the command...")
