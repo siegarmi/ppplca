@@ -1,6 +1,6 @@
 [project]
 name = "ppplca"
-version = "0.2.27"
+version = "0.2.28"
 description = ""
 authors = [
     {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch"},
@@ -13,7 +13,7 @@ dependencies = [
     "numpy (>=1.26)",
     "pandas (>=2.2)",
     "brightway2 (>=2.4)",
-    "lca-algebraic (>=1.1.2)",
+    "siegrist-lca-algebraic",
     "matplotlib (>=3.9)",
     "ecoinvent_interface (==3.1)"
 ]
