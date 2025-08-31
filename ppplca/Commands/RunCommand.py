@@ -142,20 +142,23 @@ class RunCommand:
     def LCA_calculations(ValueChain_, params, user_db):
         import numpy as np
         import matplotlib
+        import bw2data as bd
         matplotlib.use("Agg")
         import lca_algebraic as agb
         from ppplca.config import config
 
         from ppplca.Models.LCA import LCA
 
-        impact_categories = [agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[0],
+        impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
+
+        """ impact_categories = [agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[0],
                         agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[1],
                         agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[2],
                         agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[3],
                         agb.findMethods('Particulate matter', mainCat='PM regionalized')[0],
                         agb.findMethods('Water stress', mainCat='AWARE regionalized')[0],
                         agb.findMethods('Occupation', mainCat='Biodiversity regionalized')[0],
-                        agb.findMethods('Transformation', mainCat='Biodiversity regionalized')[0]]    
+                        agb.findMethods('Transformation', mainCat='Biodiversity regionalized')[0]] """    
         n_iterations = int(config('montecarlo.n_iterations'))
         np.random.seed(42)
         lca = LCA(impact_categories, params)
