@@ -4,11 +4,33 @@ class RunCommand:
         pass
 
     def handle(self,file,sheet_name):
+        import lca_algebraic as agb
+        import bw2data as bd
+
         self.set_project_name()
-        af_reg_name, ei_reg_name, bio_name = self.set_database_names()
-        self.check_databases(af_reg_name, ei_reg_name)
-        value_chains_data = self.import_value_chains(file,sheet_name)
-        self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data)
+        answer = input("Would you like to conduct a regionalized assessment for water use, land use related biodiversity loss, and human health impacts from particulate matter or a non-regionalized assessment using ReCiPe 2016? [regionalized/recipe]")
+        if answer.lower() == "regionalized":
+            impact_categories = [agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[0],
+                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[1],
+                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[2],
+                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[3],
+                        agb.findMethods('Particulate matter', mainCat='PM regionalized')[0],
+                        agb.findMethods('Water stress', mainCat='AWARE regionalized')[0],
+                        agb.findMethods('Occupation', mainCat='Biodiversity regionalized')[0],
+                        agb.findMethods('Transformation', mainCat='Biodiversity regionalized')[0]]
+            af_reg_name, ei_reg_name, bio_name = self.set_database_names_regionalized()
+            self.check_databases(af_reg_name, ei_reg_name)
+            value_chains_data = self.import_value_chains(file,sheet_name)
+            self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data, impact_categories)
+        elif answer.lower() == "recipe":
+            impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
+            af_name, ei_name, bio_name = self.set_database_names()
+            self.check_databases(af_name, ei_name)
+            value_chains_data = self.import_value_chains(file,sheet_name)
+            self.analysis(ei_name, af_name, bio_name, value_chains_data, impact_categories)
+        else:
+            print("Please enter either 'regionalized' or 'recipe'.")
+            return
 
     @staticmethod
     def set_project_name():
@@ -20,7 +42,7 @@ class RunCommand:
         bd.projects.set_current(project)
     
     @staticmethod
-    def set_database_names():
+    def set_database_names_regionalized():
         af_reg_name = "agrifootprint 6.3 all allocations_regionalized"
         ei_reg_name = "ecoinvent-3.10-cutoff_regionalized"
         bio_name = "ecoinvent-3.10-biosphere"
@@ -28,11 +50,19 @@ class RunCommand:
         return af_reg_name, ei_reg_name, bio_name
     
     @staticmethod
-    def check_databases(af_reg_name, ei_reg_name):
+    def set_database_names():
+        af_reg_name = "agrifootprint 6.3 all allocations"
+        ei_reg_name = "ecoinvent-3.10-cutoff"
+        bio_name = "ecoinvent-3.10-biosphere"
+
+        return af_reg_name, ei_reg_name, bio_name
+    
+    @staticmethod
+    def check_databases(af_name, ei_name):
         import bw2data as bd
 
-        if ei_reg_name in bd.databases and af_reg_name in bd.databases:
-            print(f"{ei_reg_name} and {af_reg_name} have already been imported.")
+        if ei_name in bd.databases and af_name in bd.databases:
+            print(f"{ei_name} and {af_name} have already been imported.")
             
         else:
             print("Databases have not been imported yet. Please run script databases_setup.py first.")
@@ -51,7 +81,7 @@ class RunCommand:
 
         return value_chains_data
     
-    def analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data):
+    def analysis(self, ei_reg_name, af_reg_name, bio_name, value_chains_data, impact_categories):
         import pandas as pd
         import lca_algebraic as agb
         from ppplca.Models.ValueChain import ValueChain
@@ -84,7 +114,7 @@ class RunCommand:
                     stage_name, stage, params = result
                 ValueChain_.addStage(stage_name,stage)
 
-            self.LCA_calculations(ValueChain_, params, user_db)
+            self.LCA_calculations(ValueChain_, params, user_db, impact_categories)
 
     @staticmethod
     def create_location_string(value_chain_data):
@@ -139,26 +169,13 @@ class RunCommand:
             
     
     @staticmethod
-    def LCA_calculations(ValueChain_, params, user_db):
+    def LCA_calculations(ValueChain_, params, user_db, impact_categories):
         import numpy as np
         import matplotlib
-        import bw2data as bd
         matplotlib.use("Agg")
-        import lca_algebraic as agb
         from ppplca.config import config
-
         from ppplca.Models.LCA import LCA
-
-        impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
-
-        """ impact_categories = [agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[0],
-                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[1],
-                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[2],
-                        agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[3],
-                        agb.findMethods('Particulate matter', mainCat='PM regionalized')[0],
-                        agb.findMethods('Water stress', mainCat='AWARE regionalized')[0],
-                        agb.findMethods('Occupation', mainCat='Biodiversity regionalized')[0],
-                        agb.findMethods('Transformation', mainCat='Biodiversity regionalized')[0]] """    
+            
         n_iterations = int(config('montecarlo.n_iterations'))
         np.random.seed(42)
         lca = LCA(impact_categories, params)
