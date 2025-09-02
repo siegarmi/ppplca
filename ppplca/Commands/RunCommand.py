@@ -47,7 +47,7 @@ class RunCommand:
         import bw2data as bd
 
         bio3 = bd.Database(bio_name)
-        method = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]][-1]
+        method = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0] and "water use no LT" in method[1] and "water consumption potential (WCP) no LT" in method[2]][0]
         m = bd.Method(method)
         cfs = m.load()
 
