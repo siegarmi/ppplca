@@ -10,28 +10,48 @@ class SetupDatabaseCommand:
 
         bd.projects.dir
         bd.projects.set_current(config('project.name'))
-        answer = input("Database setup is starting, it will take around 48 hours to complete on a regular laptop. Are you sure you want to continue? [Y/n]")
-        if answer.lower() != "y":
-            current_time = time.localtime()
-            print(f"[{time.strftime('%H:%M:%S', current_time)}] Database setup aborted. Rerun the command...")
-            return 
-        print(f"Database setup is starting...")
-        
-        start = time.time()
-        ei_name, bio_name = self.load_ecoinvent_database()
-        af_name = self.load_agrifootprint_database(ei_name, bio_name)
-        eidb = bd.Database(ei_name)
-        afdb = bd.Database(af_name)
-        """ eidb_reg, afdb_reg = self.regionalize_databases(ei_name, af_name)
-        self.create_electricity_market_groups(eidb_reg)
-        self.create_agri_activities(eidb_reg, afdb_reg)
-        self.create_heat_activities(eidb_reg) """
-        self.create_electricity_market_groups(eidb)
-        self.create_agri_activities(eidb, afdb)
-        self.create_heat_activities(eidb)
 
-        end = time.time()
-        print(f"Database setup completed in {end - start} seconds.")
+        answer = input("Would you like to set up regionalized databases to assess regionalized water use ipacts, land use related biodiversity loss, and human health impacts from particulate matter emissions (this will take around 48h)? [Y/n] ")
+        if answer.lower() == "y":
+            answer = input("Database setup is starting, it will take around 48 hours to complete on a regular laptop. Are you sure you want to continue? [Y/n]")
+            if answer.lower() != "y":
+                current_time = time.localtime()
+                print(f"[{time.strftime('%H:%M:%S', current_time)}] Database setup aborted. Rerun the command...")
+                return 
+            print(f"Database setup is starting...")
+            
+            start = time.time()
+
+            ei_name, bio_name = self.load_ecoinvent_database()
+            af_name = self.load_agrifootprint_database(ei_name, bio_name)
+            eidb = bd.Database(ei_name)
+            afdb = bd.Database(af_name)
+            eidb_reg, afdb_reg = self.regionalize_databases(ei_name, af_name)
+            self.create_electricity_market_groups(eidb_reg)
+            self.create_agri_activities(eidb_reg, afdb_reg)
+            self.create_heat_activities(eidb_reg)
+            self.create_electricity_market_groups(eidb)
+            self.create_agri_activities(eidb, afdb)
+            self.create_heat_activities(eidb)
+
+            end = time.time()
+            print(f"Database setup completed in {end - start} seconds.")
+        elif answer.lower() == "n":
+            start = time.time()
+
+            ei_name, bio_name = self.load_ecoinvent_database()
+            af_name = self.load_agrifootprint_database(ei_name, bio_name)
+            eidb = bd.Database(ei_name)
+            afdb = bd.Database(af_name)
+            self.create_electricity_market_groups(eidb)
+            self.create_agri_activities(eidb, afdb)
+            self.create_heat_activities(eidb)
+
+            end = time.time()
+            print(f"Database setup completed in {end - start} seconds.")
+        else:
+            print("Please enter either 'Y' or 'n'.")
+            return
 
     @staticmethod
     def load_ecoinvent_database():
