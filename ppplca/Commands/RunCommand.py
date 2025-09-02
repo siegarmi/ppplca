@@ -23,6 +23,7 @@ class RunCommand:
             value_chains_data = self.import_value_chains(file,sheet_name)
             self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data, impact_categories)
         elif answer.lower() == "recipe":
+            self.update_recipe_water_use(bio_name)
             impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
             af_name, ei_name, bio_name = self.set_database_names()
             self.check_databases(af_name, ei_name)
@@ -41,6 +42,37 @@ class RunCommand:
         project = config('project.name')
         bd.projects.set_current(project)
     
+    @staticmethod
+    def update_recipe_water_use(bio_name):
+        import bw2data as bd
+
+        bio3 = bd.Database(bio_name)
+        method = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]][-1]
+        m = bd.Method(method)
+        cfs = m.load()
+
+        water_use_list = [act for act in bio3 if "Water" in act['name']
+                            and 'natural resource' in act['categories']
+                            and 'air' not in act['name']
+                            and 'ocean' not in act['name']
+                            and 'ocean' not in act.get('categories')]
+        water_emission_list = [act for act in bio3 if "Water" in act['name']
+                                and 'water' in act['categories']
+                                and 'ocean' not in act.get('categories')]
+
+        existing_flows = {cf[0] for cf in cfs}
+
+        for water_flow in water_use_list:
+            if water_flow.key not in existing_flows:
+                new_cf = (water_flow.key, 1)
+                cfs.append(new_cf)
+        for water_flow in water_emission_list:
+            if water_flow.key not in existing_flows:
+                new_cf = (water_flow.key, -1)
+                cfs.append(new_cf)
+
+        m.write(cfs)
+
     @staticmethod
     def set_database_names_regionalized():
         af_reg_name = "agrifootprint 6.3 all allocations_regionalized"
@@ -167,7 +199,6 @@ class RunCommand:
 
         return stage_name, stage, params
             
-    
     @staticmethod
     def LCA_calculations(ValueChain_, params, user_db, impact_categories):
         import numpy as np
