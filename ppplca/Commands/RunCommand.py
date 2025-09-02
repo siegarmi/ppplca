@@ -23,10 +23,10 @@ class RunCommand:
             value_chains_data = self.import_value_chains(file,sheet_name)
             self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data, impact_categories)
         elif answer.lower() == "recipe":
-            self.update_recipe_water_use(bio_name)
-            impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
             af_name, ei_name, bio_name = self.set_database_names()
             self.check_databases(af_name, ei_name)
+            self.update_recipe_water_use(bio_name)
+            impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
             value_chains_data = self.import_value_chains(file,sheet_name)
             self.analysis(ei_name, af_name, bio_name, value_chains_data, impact_categories)
         else:
