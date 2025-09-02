@@ -22,10 +22,10 @@ class SetupDatabaseCommand:
         af_name = self.load_agrifootprint_database(ei_name, bio_name)
         eidb = bd.Database(ei_name)
         afdb = bd.Database(af_name)
-        eidb_reg, afdb_reg = self.regionalize_databases(ei_name, af_name)
+        """ eidb_reg, afdb_reg = self.regionalize_databases(ei_name, af_name)
         self.create_electricity_market_groups(eidb_reg)
         self.create_agri_activities(eidb_reg, afdb_reg)
-        self.create_heat_activities(eidb_reg)
+        self.create_heat_activities(eidb_reg) """
         self.create_electricity_market_groups(eidb)
         self.create_agri_activities(eidb, afdb)
         self.create_heat_activities(eidb)
