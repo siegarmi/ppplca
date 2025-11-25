@@ -852,6 +852,73 @@ def write_unlinked_biosphere(db):
     bd.Database(ag_bio_name).register()
     db.add_unlinked_flows_to_biosphere_database(ag_bio_name)
 
+def update_recipe():
+    bio_unlinked = bd.Database("biosphere agrifootprint unlinked")
+    path = "data/recipe_method_af/af_LCIA_method_recipe2016_midpoint_H.csv"
+
+    recipe_agrifootprint = bi.SimaProLCIACSVImporter(
+        filepath=path,
+        delimiter=";"
+    )
+
+    name_mapping = {
+        'Global warming': 'climate change no LT',
+        'Human carcinogenic toxicity': 'human toxicity: carcinogenic no LT',
+        'Ionizing radiation': 'ionising radiation no LT',
+        'Freshwater ecotoxicity': 'ecotoxicity: freshwater no LT',
+        'Terrestrial ecotoxicity': 'ecotoxicity: terrestrial no LT',
+        'Water consumption': 'water use no LT',
+        'Fossil resource scarcity': 'energy resources: non-renewable, fossil no LT',
+        'Marine ecotoxicity': 'ecotoxicity: marine no LT',
+        'Human non-carcinogenic toxicity': 'human toxicity: non-carcinogenic no LT',
+        'Mineral resource scarcity': 'material resources: metals/minerals no LT',
+        'Ozone formation, Human health': 'photochemical oxidant formation: human health no LT',
+        'Marine eutrophication': 'eutrophication: marine no LT',
+        'Land use': 'land use no LT',
+        'Freshwater eutrophication': 'eutrophication: freshwater no LT',
+        'Stratospheric ozone depletion': 'ozone depletion no LT',
+        'Fine particulate matter formation': 'particulate matter formation no LT',
+        'Ozone formation, Terrestrial ecosystems': 'photochemical oxidant formation: terrestrial ecosystems no LT',
+        'Terrestrial acidification': 'acidification: terrestrial no LT'
+    }
+
+    for method in recipe_agrifootprint.data:
+        old_name = method["name"]
+        second_part = old_name[1]  # the impact category
+        new_name = (old_name[0], name_mapping[second_part])
+        method["name"] = new_name
+
+    recipe_impact_categories = [m for m in bd.methods if "ReCiPe" in str(m) and "midpoint" in str(m) and "(H)" in str(m) and "no LT" in str(m)]
+
+    agrifootprint_lookup = {
+        method["name"][1]: method for method in recipe_agrifootprint
+    }
+
+    for original_impact_category in recipe_impact_categories:
+        print(f'Modifying {original_impact_category}')
+        method = bd.Method(original_impact_category)
+        method_data = method.load()
+        print(len(method_data), "CFs in method before addition")
+        name = original_impact_category[2]
+        agrifootprint_impact_category_selected = agrifootprint_lookup.get(name)
+        
+        lcia_new_lookup = {
+            (exc["name"].lower().strip(), tuple(cat.lower().strip() for cat in exc["categories"] if cat.strip())): exc
+            for exc in agrifootprint_impact_category_selected["exchanges"]
+        }
+        
+        existing_keys = {t[0] for t in method_data}
+
+        for flow in bio_unlinked:
+            lookup_key = (flow["name"].lower().strip(), tuple(cat.lower().strip() for cat in flow["categories"]))
+            if lookup_key in lcia_new_lookup and flow.key not in existing_keys:
+                print(f"✅ Match: {flow['name']} — {flow['categories']}")
+                flow_tuple = (flow.key, lcia_new_lookup[lookup_key]["amount"])
+                method_data.append(flow_tuple)
+        
+        method.write(method_data)
+        print(len(method.load()), "CFs after adding")
+
 def import_agrifootprint(ei_name,bio_name):
     af_path = "Database/agrifootprint_6_3_all_allocations.csv"
     af_name = "agrifootprint 6.3 all allocations"
@@ -950,6 +1017,10 @@ def import_agrifootprint(ei_name,bio_name):
 
 
         write_unlinked_biosphere(af)
+        print("Create new biosphere database for unlinked flows.")
         af.match_database("biosphere agrifootprint unlinked", fields=("name", "unit", "categories"))
         af.drop_unlinked(i_am_reckless=True)
         af.write_database()
+
+        print("Update LCIA recipe 2016 midpoint H no LT method to cover unlinked biosphere flows.")
+        update_recipe()
