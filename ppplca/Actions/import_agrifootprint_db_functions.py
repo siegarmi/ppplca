@@ -853,13 +853,16 @@ def write_unlinked_biosphere(db):
     db.add_unlinked_flows_to_biosphere_database(ag_bio_name)
 
 def update_recipe():
-    bio_unlinked = bd.Database("biosphere agrifootprint unlinked")
-    path = "data/recipe_method_af/af_LCIA_method_recipe2016_midpoint_H.csv"
+    import importlib.resources as resources
 
-    recipe_agrifootprint = bi.SimaProLCIACSVImporter(
-        filepath=path,
-        delimiter=";"
-    )
+    bio_unlinked = bd.Database("biosphere agrifootprint unlinked")
+
+    with resources.path("ppplca.data.recipe_method_af", 
+                    "af_LCIA_method_recipe2016_midpoint_H.csv") as file_path:
+        recipe_agrifootprint = bi.SimaProLCIACSVImporter(
+            filepath=str(file_path),
+            delimiter=";"
+        )
 
     name_mapping = {
         'Global warming': 'climate change no LT',
