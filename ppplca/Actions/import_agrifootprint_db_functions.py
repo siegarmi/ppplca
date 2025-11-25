@@ -902,8 +902,12 @@ def update_recipe():
         method = bd.Method(original_impact_category)
         method_data = method.load()
         print(len(method_data), "CFs in method before addition")
-        name = original_impact_category[2]
-        agrifootprint_impact_category_selected = agrifootprint_lookup.get(name)
+        keys = original_impact_category
+        agrifootprint_impact_category_selected = None
+        for k in keys:
+            if k in agrifootprint_lookup:
+                agrifootprint_impact_category_selected = agrifootprint_lookup[k]
+                break
         
         lcia_new_lookup = {
             (exc["name"].lower().strip(), tuple(cat.lower().strip() for cat in exc["categories"] if cat.strip())): exc
