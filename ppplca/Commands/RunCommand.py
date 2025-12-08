@@ -8,7 +8,7 @@ class RunCommand:
         import bw2data as bd
 
         self.set_project_name()
-        answer = input("Would you like to conduct a regionalized assessment for water use, land use related biodiversity loss, and human health impacts from particulate matter or a non-regionalized assessment using ReCiPe 2016? [regionalized/recipe]")
+        answer = input("Would you like to conduct a regionalized assessment for water use, land use related biodiversity loss, and human health impacts from particulate matter or a non-regionalized assessment using ReCiPe 2016 midpoint or endpoint? [regionalized/recipe midpoint/recipe endpoint]")
         if answer.lower() == "regionalized":
             impact_categories = [agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[0],
                         agb.findMethods('GWP_100a', mainCat='IPCC_AR6')[1],
@@ -22,15 +22,24 @@ class RunCommand:
             self.check_databases(af_reg_name, ei_reg_name)
             value_chains_data = self.import_value_chains(file,sheet_name)
             self.analysis(ei_reg_name, af_reg_name, bio_name, value_chains_data, impact_categories)
-        elif answer.lower() == "recipe":
+        elif answer.lower() == "recipe midpoint":
             af_name, ei_name, bio_name = self.set_database_names()
             self.check_databases(af_name, ei_name)
-            self.update_recipe_water_use(bio_name)
+            self.update_recipe_water_use(bio_name,'ReCiPe 2016 v1.03, midpoint (H) no LT', 'water use no LT', 'water consumption potential (WCP) no LT', cf_value = 1)
             impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0]]
             value_chains_data = self.import_value_chains(file,sheet_name)
             self.analysis(ei_name, af_name, bio_name, value_chains_data, impact_categories)
+        elif answer.lower() == "recipe endpoint":
+            af_name, ei_name, bio_name = self.set_database_names()
+            self.check_databases(af_name, ei_name)
+            self.update_recipe_water_use(bio_name,'ReCiPe 2016 v1.03, endpoint (H) no LT', 'ecosystem quality no LT', 'water use: aquatic ecosystems no LT', cf_value = 6.04e-13)
+            self.update_recipe_water_use(bio_name,'ReCiPe 2016 v1.03, endpoint (H) no LT', 'ecosystem quality no LT', 'water use: terrestrial ecosystems no LT', cf_value = 1.35e-08)
+            self.update_recipe_water_use(bio_name,'ReCiPe 2016 v1.03, endpoint (H) no LT', 'human health no LT', 'water use: human health no LT', cf_value = 2.22e-06)
+            impact_categories = [method for method in bd.methods if 'ReCiPe 2016 v1.03, endpoint (H) no LT' in method[0]]
+            value_chains_data = self.import_value_chains(file,sheet_name)
+            self.analysis(ei_name, af_name, bio_name, value_chains_data, impact_categories)
         else:
-            print("Please enter either 'regionalized' or 'recipe'.")
+            print("Please enter either 'regionalized', 'recipe midpoint', or 'recipe endpoint'.")
             return
 
     @staticmethod
@@ -43,11 +52,11 @@ class RunCommand:
         bd.projects.set_current(project)
     
     @staticmethod
-    def update_recipe_water_use(bio_name):
+    def update_recipe_water_use(bio_name,method_name_0, method_name_1, method_name_2, cf_value = 1):
         import bw2data as bd
 
         bio3 = bd.Database(bio_name)
-        method = [method for method in bd.methods if 'ReCiPe 2016 v1.03, midpoint (H) no LT' in method[0] and "water use no LT" in method[1] and "water consumption potential (WCP) no LT" in method[2]][0]
+        method = [method for method in bd.methods if method_name_0 in method[0] and method_name_1 in method[1] and method_name_2 in method[2]][0]
         m = bd.Method(method)
         cfs = m.load()
 
@@ -64,11 +73,11 @@ class RunCommand:
 
         for water_flow in water_use_list:
             if water_flow.key not in existing_flows:
-                new_cf = (water_flow.key, 1)
+                new_cf = (water_flow.key, cf_value)
                 cfs.append(new_cf)
         for water_flow in water_emission_list:
             if water_flow.key not in existing_flows:
-                new_cf = (water_flow.key, -1)
+                new_cf = (water_flow.key, -cf_value)
                 cfs.append(new_cf)
 
         m.write(cfs)
