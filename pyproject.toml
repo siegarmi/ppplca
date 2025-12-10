@@ -1,6 +1,6 @@
 [project]
 name = "ppplca"
-version = "0.2.39"
+version = "0.2.40"
 description = ""
 authors = [
     {name = "Armin Siegrist",email = "armin.siegrist@hest.ethz.ch"},
