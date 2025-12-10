@@ -113,7 +113,7 @@ class RunCommand:
     def import_value_chains(file, sheet_name = None):
         import pandas as pd
 
-        if file == "value_chains_test.xlsx":
+        if file == "value_chains.xlsx":
             value_chains_data = pd.read_excel(file, sheet_name='Value_chains')
         elif sheet_name:
             value_chains_data = pd.read_excel(file, sheet_name=sheet_name)
